@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สูตรบาคาร่า - สามทหารเสือ</title>
+    <style>
+        body {
+          background-image: url('bg.webp');
+  background-size: cover; /* ปรับขนาดให้เต็มพื้นที่ */
+  background-position: center center; /* วางไว้ที่กลางของหน้า */
+  background-attachment: fixed; /* ทำให้ภาพพื้นหลังไม่เลื่อนตามการเลื่อนหน้า */
+
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .log {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            gap: 10px;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .log span {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .player { color: blue; }   /* ผู้เล่น (Player) สีฟ้า */
+        .banker { color: red; }    /* เจ้ามือ (Banker) สีแดง */
+        .tie { color: green; }     /* เสมอ (Tie) สีเขียว */
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+  <div style="
+    position: fixed; 
+    bottom: 20px; 
+    left: 20px; 
+    background: rgba(255, 99, 71, 0.9); 
+    color: white; 
+    font-size: 16px; 
+    padding: 15px 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
+    max-width: 300px; 
+    z-index: 9999; 
+    font-family: Arial, sans-serif;
+    animation: fadeIn 1s ease-out;
+">
+    ⚠️ <strong>คำเตือน:</strong> ควรมีทุนทบอย่างน้อย 3-4 ไม้เพื่อป้องกันการเสีย. 
+    ขอให้เล่นด้วยความระมัดระวังและความหวังดีจากเรา ❤️
+</div>
+
+<!-- CSS Animation for fade-in effect -->
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+
+<style>
+  .link-box {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+  }
+  .link-box a {
+      color: white;
+      text-decoration: none;
+      margin-left: 10px;
+  }
+  .link-box .arrow {
+      margin-left: 10px;
+      font-size: 20px;
+  }
+</style>
+</head>
+<body>
+
+    <div class="content">
+
+      <!-- รูปภาพที่เป็นลิงก์ -->
+      <div class="promo-images">
+          <a href="https://g2got888.life/register?member_ref=95zmm7189839" target="_blank">
+              <img src="logowed1.png" alt="Website 1" class="promo-img">
+          </a>
+          <a href="https://ezy168.co/register?member_ref=abugta168115550" target="_blank">
+              <img src="logowed2.png" alt="Website 2" class="promo-img">
+          </a>
+      </div>
+  </div>
+
+  <div style="color: #34495e; 
+  font-size: 48px; 
+  font-weight: bold; 
+  padding: 30px 60px; 
+  border-radius: 15px; 
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3); 
+  box-shadow: none; 
+  text-align: center; 
+  transition: transform 0.3s ease; 
+  font-family: Arial, sans-serif; 
+  background: none; 
+  cursor: default;"
+onmouseover="this.style.transform='scale(1.1)'" 
+onmouseout="this.style.transform='scale(1)'">
+สูตร <span style="color: #ff69b4; text-decoration: underline;">บาคาร่า</span>
+</div>
+
+
+  <div style="color: #34495e; 
+  font-size: 40px; 
+  font-weight: bold; 
+  padding: 20px 50px; 
+  text-align: center; 
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3); 
+  font-family: Arial, sans-serif; 
+  transition: transform 0.3s ease; 
+  cursor: default;"
+onmouseover="this.style.transform='scale(1.1)'"
+onmouseout="this.style.transform='scale(1)'">
+เลือก <span style="color: #ff69b4; text-decoration: underline;">ผลลัพธ์ของการออกไพ่</span>
+</div>
+
+
+<button onclick="addResult('Player')" style="
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white; font-size: 18px; font-weight: bold;
+    padding: 15px 30px; border: none; border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; cursor: pointer;
+    margin: 10px;
+" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.3)';" 
+   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 15px rgba(0, 0, 0, 0.2)';">
+    ผู้เล่น (P)
+</button>
+
+
+<button onclick="addResult('Banker')" style="
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white; font-size: 18px; font-weight: bold;
+    padding: 15px 30px; border: none; border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; cursor: pointer;
+    margin: 10px;
+" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.3)';" 
+   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 15px rgba(0, 0, 0, 0.2)';">
+    เจ้ามือ (B)
+</button>
+
+<button onclick="addResult('Tie')" style="
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white; font-size: 18px; font-weight: bold;
+    padding: 15px 30px; border: none; border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; cursor: pointer;
+    margin: 10px;
+" onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.3)';" 
+   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 15px rgba(0, 0, 0, 0.2)';">
+    เสมอ (T)
+</button>
+
+
+        
+        <h2>ผลลัพธ์ที่บันทึก</h2>
+        <div id="log" class="log"></div>
+        
+        <h2>คำแนะนำ:</h2>
+        <p id="suggestion">กรุณากรอกผลลัพธ์...</p>
+    </div>
+
+    <script>
+        const results = [];  // เก็บผลลัพธ์การออกไพ่
+        let suggestionCounter = 0;  // ตัวนับสำหรับคำแนะนำการแทง "น้ำเงิน" 3 ไม้
+
+        function addResult(result) {
+            results.push(result);
+            updateLog();
+            checkPattern();
+        }
+
+        function updateLog() {
+            const log = document.getElementById("log");
+            log.innerHTML = ""; // ล้าง log ก่อนแสดงใหม่
+
+            // จัดกลุ่มผลลัพธ์ให้แสดงทีละ 6 ตัวต่อคอลัมน์
+            for (let i = 0; i < results.length; i += 6) {
+                const column = document.createElement("div");
+                column.className = "column";
+
+                // เพิ่มผลลัพธ์ในคอลัมน์ปัจจุบัน (สูงสุด 6 ตัวต่อคอลัมน์)
+                results.slice(i, i + 6).forEach(result => {
+                    let span = document.createElement("span");
+                    if (result === "Player") {
+                        span.textContent = "P";
+                        span.classList.add("player");
+                    } else if (result === "Banker") {
+                        span.textContent = "B";
+                        span.classList.add("banker");
+                    } else if (result === "Tie") {
+                        span.textContent = "T";
+                        span.classList.add("tie");
+                    }
+                    column.appendChild(span);
+                });
+                log.appendChild(column);
+            }
+        }
+
+        function checkPattern() {
+            const suggestion = document.getElementById("suggestion");
+
+            // เช็คผลลัพธ์ 3 เกมล่าสุด
+            const lastThree = results.slice(-3);
+            if (lastThree.length === 3) {
+                // ตรวจจับรูปแบบตามสูตร "สามทหารเสือ"
+                if (lastThree[0] === "Banker" && lastThree[1] === "Banker" && lastThree[2] === "Banker") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_p_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+
+                } else if (lastThree[0] === "Banker" && lastThree[1] === "Banker" && lastThree[2] === "Player") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_p_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+
+                } else if (lastThree[0] === "Banker" && lastThree[1] === "Player" && lastThree[2] === "Banker") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_p_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+
+                } else if (lastThree[0] === "Banker" && lastThree[1] === "Player" && lastThree[2] === "Player") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_b_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Player" && lastThree[2] === "Player") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_b_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Banker" && lastThree[2] === "Banker") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_p_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Banker" && lastThree[2] === "Player") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_b_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Player" && lastThree[2] === "Banker") {
+                  suggestion.innerHTML = `
+    <div style="display: inline-flex; align-items: center; background: linear-gradient(45deg, #8e44ad, #3498db); color: white; font-size: 24px; font-weight: bold; padding: 10px 20px; border-radius: 50px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;"
+    onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 12px 20px rgba(0, 0, 0, 0.4)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 15px rgba(0, 0, 0, 0.3)';">
+        แนะนำให้แทง 
+        <img src="symbol_b_small.webp" alt="Player" style="width: 30px; height: 30px; margin-left: 10px; filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));"/>
+    </div>
+`;
+
+                } else {
+                    suggestion.textContent = "รอผลลัพธ์เพิ่มเติม...";
+                }
+            } else {
+                suggestion.textContent = "รอผลลัพธ์เพิ่มเติม...";
+            }
+        }
+           /* if (lastThree.length === 3) {
+                // ตรวจจับรูปแบบตามสูตร "สามทหารเสือ"
+                if (lastThree[0] === "Banker" && lastThree[1] === "Banker" && lastThree[2] === "Banker") {
+                    suggestion.textContent = "ไม้ 1: แทง P, ไม้ 2: แทง P, ไม้ 3: แทง P";
+                } else if (lastThree[0] === "Banker" && lastThree[1] === "Banker" && lastThree[2] === "Player") {
+                    suggestion.textContent = "ไม้ 1: แทง P, ไม้ 2: แทง B, ไม้ 3: แทง B";
+                } else if (lastThree[0] === "Banker" && lastThree[1] === "Player" && lastThree[2] === "Banker") {
+                    suggestion.textContent = "ไม้ 1: แทง P, ไม้ 2: แทง B, ไม้ 3: แทง B";
+                } else if (lastThree[0] === "Banker" && lastThree[1] === "Player" && lastThree[2] === "Player") {
+                    suggestion.textContent = "ไม้ 1: แทง B, ไม้ 2: แทง P, ไม้ 3: แทง P";
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Player" && lastThree[2] === "Player") {
+                    suggestion.textContent = "ไม้ 1: แทง B, ไม้ 2: แทง B, ไม้ 3: แทง B";
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Banker" && lastThree[2] === "Banker") {
+                    suggestion.textContent = "ไม้ 1: แทง P, ไม้ 2: แทง B, ไม้ 3: แทง B";
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Banker" && lastThree[2] === "Player") {
+                    suggestion.textContent = "ไม้ 1: แทง B, ไม้ 2: แทง P, ไม้ 3: แทง P";
+                } else if (lastThree[0] === "Player" && lastThree[1] === "Player" && lastThree[2] === "Banker") {
+                    suggestion.textContent = "ไม้ 1: แทง B, ไม้ 2: แทง P, ไม้ 3: แทง P";
+                } else {
+                    suggestion.textContent = "รอผลลัพธ์เพิ่มเติม...";
+                }
+            } else {
+                suggestion.textContent = "รอผลลัพธ์เพิ่มเติม...";
+            }
+        }*/
+        document.onkeydown = function(e) {
+    if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+        return false;  // ป้องกัน F12 และการใช้ Inspect
+    }
+}
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();  // ป้องกันการคลิกขวา
+});
+document.addEventListener('copy', function(e) {
+    e.preventDefault(); // ป้องกันการคัดลอก
+});
+
+    </script>
+</body>
+</html>
